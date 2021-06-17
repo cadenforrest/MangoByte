@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands, tasks
-from __main__ import settings, botdata, invite_link, httpgetter, loggingdb
+from cogs.utils import settings, botdata, httpgetter, loggingdb
 from cogs.utils.helpers import *
 from cogs.utils.botdata import UserInfo
 from cogs.utils import checks, botdatatypes, wikipedia
@@ -19,12 +19,16 @@ import praw
 import os
 from .mangocog import *
 
+
 donate_links = {
 	"Patreon": "https://www.patreon.com/dillerm",
 	"BuyMeACoffee": "https://www.buymeacoffee.com/dillerm",
 	"Ko-fi": "https://ko-fi.com/dillerm",
 	"PayPal": "https://www.paypal.me/dillerm"
 }
+
+permissions = 314432
+invite_link = f"https://discordapp.com/oauth2/authorize?permissions={permissions}&scope=bot&client_id=213476188037971968"
 
 def load_words():
 	words = {}

@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 from cogs.utils.helpers import *
 from cogs.utils.clip import *
-from __main__ import settings, botdata, report_error, loggingdb
+from cogs.utils import settings, botdata, loggingdb
+from cogs.utils.error_reporter import report_error
 from cogs.utils import checks
 import cogs.utils.botdatatypes as botdatatypes
 import asyncio

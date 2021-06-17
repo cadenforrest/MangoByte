@@ -1,18 +1,14 @@
-
 # The following have to be imported and initialized in the correct order
 from cogs.utils.settings import Settings
-settings = Settings()
 
 from cogs.utils.botdata import BotData
-botdata = BotData()
 
 from cogs.utils.loggingdb import LoggingDb
-loggingdb = LoggingDb(settings.resource("loggingdb.db"))
 
 from cogs.utils.httpgetter import HttpGetter
-httpgetter = HttpGetter()
 
 from cogs.utils.helpers import *
+from cogs.utils.error_reporter import report_error
 import discord
 import traceback
 import asyncio
@@ -28,6 +24,11 @@ import sys
 import inspect
 
 startupTimer = SimpleTimer()
+settings = Settings()
+botdata = BotData()
+loggingdb = LoggingDb(resource("loggingdb.db"))
+httpgetter = HttpGetter()
+
 
 if not os.path.exists("logs"):
     os.makedirs("logs")

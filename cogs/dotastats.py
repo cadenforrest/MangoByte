@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
-from __main__ import settings, botdata, thinker, httpgetter
+from cogs.utils import settings, botdata, httpgetter
 from cogs.utils import checks
 from cogs.utils.helpers import *
 from cogs.utils.commandargs import *
 from cogs.utils import drawdota
 from cogs.utils import drawgraph
+from cogs.utils.helpers import Thinker
 import asyncio
 import async_timeout
 import string
@@ -25,6 +26,8 @@ import mock
 import httpx
 from types import *
 from .mangocog import *
+
+thinker = Thinker()
 
 class MatchNotParsedError(UserError):
 	def __init__(self, match_id, action=None):

@@ -1,10 +1,11 @@
-from __main__ import settings
+# from cogs.utils import settings
 import discord
 from discord.ext import commands
 from abc import abstractmethod
 from .helpers import *
 import re
 
+from cogs.utils import helpers
 
 class InvalidInputError(UserError):
 	def __init__(self, message):
@@ -145,16 +146,17 @@ class UserBot(ConfigVarType):
 		except commands.BadArgument:
 			raise InvalidInputError("Try giving me a bot reference like `@Bot123`")
 
-gtts_langs = read_json(settings.resource("json/gtts_languages.json"))
 
 class GttsLang(ConfigVarType):
 	@classmethod
 	async def _localize(cls, value, ctx):
+		gtts_langs = read_json(helpers.resource("json/gtts_languages.json"))
 		return gtts_langs[value]
 
 	@classmethod
 	async def _parse(cls, value, ctx):
 		value = value.lower()
+		gtts_langs = read_json(helpers.resource("json/gtts_languages.json"))
 		for lang in gtts_langs:
 			if lang.lower() == value or gtts_langs[lang].lower() == value:
 				if "-" in lang:

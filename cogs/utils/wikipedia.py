@@ -1,4 +1,4 @@
-from __main__ import settings, httpgetter
+from cogs.utils import settings, httpgetter
 from bs4 import BeautifulSoup, Tag
 from .helpers import *
 import re

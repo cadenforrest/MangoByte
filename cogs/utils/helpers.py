@@ -18,6 +18,9 @@ MENTION_PATTERN = re.compile('|'.join(MENTION_TRANSFORMS.keys()))
 
 audio_extensions = "mp3|wav|ogg"
 
+def resource(dir):
+	return os.path.join("resource/", dir)
+
 def findfile(name, path):
 	for root, dirs, files in os.walk(path):
 		if name in files:

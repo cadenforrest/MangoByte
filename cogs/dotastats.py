@@ -255,33 +255,6 @@ class DotaStats(MangoCog):
 		self.chat_wheel_info = dotabase.get_chat_wheel_infos()
 		self.dota_gif_lock = asyncio.Lock()
 
-	async def get_meta_json(self): 
-		url = 'https://api.opendota.com/api/herostats'
-		async with httpx.AsyncClient() as client:
-			r = await client.get(url)
-		return r.json()
-
-	def sort_meta(self, json, num=10): 
-		"""re-orders the meta json based on pick/ban + winrate.
-		num = number of top heroes to include """
-		sorted_json = sorted(
-			json, 
-			reverse=True, 
-			key=lambda x: ((x["pro_pick"] + x["pro_ban"]) / 993.0) 
-			+ (x['pro_win'] / x['pro_pick']),
-			)
-		if num > 0: 
-			return sorted_json[:num]
-		return sorted_json
-
-	@commands.command()
-	async def meta(self, ctx): 
-		"""returns the list of top meta heroes from https://opendota.com/heroes"""
-		json = await self.get_meta_json()
-		sorted_json = self.sort_meta(json, 10)
-		print(sorted_json)
-		# print(await self.get_meta_json())
-
 	def get_pretty_hero(self, player, use_icons=False):
 		dotabase = self.bot.get_cog("Dotabase")
 		if player["hero_id"] not in self.hero_info:

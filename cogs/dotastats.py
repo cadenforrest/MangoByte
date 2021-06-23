@@ -23,6 +23,7 @@ import typing
 import math
 from types import *
 from .mangocog import *
+import requests
 
 class MatchNotParsedError(UserError):
 	def __init__(self, match_id, action=None):
@@ -233,6 +234,32 @@ def _match_percent(player_matches, key, round_place=0, needs_key=None):
 		count = round((count * 100) / total_count, round_place)
 	value = int(count) if round_place == 0 else count
 	return f"{value}%"
+
+def get_matchup_sql_string(heroID_1, heroID_2): 
+	sql_string = "SELECT match.match_id" + \
+         + "((first.player_slot <= 127) = match.radiant_win) win,"\
+         + "match.avg_rank_tier,"\
+         +"first.hero_id,"\
+         +"second.hero_id"\
++"FROM public_matches AS match"\
++"JOIN public_player_matches first using(match_id)"\
++"JOIN public_player_matches second using(match_id)"\
++"WHERE first.hero_id = 40"\
+        + f"AND second.hero_id = {heroID_1}"\
+        + f"AND avg_rank_tier > {heroID_2}"\
+        + "AND ((first.player_slot <= 127"\
+        + "AND second.player_slot > 127)"\
+        + "OR (first.player_slot > 127"\
+        + "AND first.player_slot <= 127)) LIMIT 70"\
+
+	return sql_string
+
+def get_matchup_json(heroID_1, heroID_2): 
+	sql_string = get_matchup_sql_string(heroID_1, heroID_2)
+	response = requests.get(
+		f"https://api.opendota.com/api/explorer", params=dict(sql = get_matchup_sql_string(heroID_1, heroID_2))
+	)
+	return response.json()
 
 
 class DotaStats(MangoCog):

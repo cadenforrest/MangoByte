@@ -236,30 +236,28 @@ def _match_percent(player_matches, key, round_place=0, needs_key=None):
 	return f"{value}%"
 
 def get_matchup_sql_string(heroID_1, heroID_2): 
-	sql_string = "SELECT match.match_id" + \
-         + "((first.player_slot <= 127) = match.radiant_win) win,"\
-         + "match.avg_rank_tier,"\
-         +"first.hero_id,"\
-         +"second.hero_id"\
-+"FROM public_matches AS match"\
-+"JOIN public_player_matches first using(match_id)"\
-+"JOIN public_player_matches second using(match_id)"\
-+"WHERE first.hero_id = 40"\
-        + f"AND second.hero_id = {heroID_1}"\
-        + f"AND avg_rank_tier > {heroID_2}"\
-        + "AND ((first.player_slot <= 127"\
-        + "AND second.player_slot > 127)"\
-        + "OR (first.player_slot > 127"\
-        + "AND first.player_slot <= 127)) LIMIT 70"\
+	sql_string = "SELECT match.match_id " \
+         "((first.player_slot <= 127) = match.radiant_win) win, "\
+          "match.avg_rank_tier, "\
+         "first.hero_id, "\
+         "second.hero_id "\
+	"FROM public_matches AS match "\
+	"JOIN public_player_matches first using(match_id) "\
+	"JOIN public_player_matches second using(match_id) "\
+	"WHERE first.hero_id = 40 "\
+					f"AND second.hero_id = {heroID_1} "\
+					f"AND avg_rank_tier > {heroID_2} "\
+					"AND ((first.player_slot <= 127 "\
+					"AND second.player_slot > 127) "\
+					"OR (first.player_slot > 127 "\
+					"AND first.player_slot <= 127)) LIMIT 70 "\
 
 	return sql_string
 
-def get_matchup_json(heroID_1, heroID_2): 
+async def get_matchup_json(heroID_1, heroID_2): 
 	sql_string = get_matchup_sql_string(heroID_1, heroID_2)
-	response = requests.get(
-		f"https://api.opendota.com/api/explorer", params=dict(sql = get_matchup_sql_string(heroID_1, heroID_2))
-	)
-	return response.json()
+	json = await httpgetter.get(f"https://api.opendota.com/api/explorer/?sql="+ urllib.parse.quote(sql_string, safe=''))
+	return json
 
 
 class DotaStats(MangoCog):
@@ -527,6 +525,12 @@ class DotaStats(MangoCog):
 		embed.set_footer(text=str(match_id))
 
 		await ctx.send(embed=embed, file=match_image)
+
+	@commands.command(aliases=["matchup", "mu", "vs"])
+	async def matchups(self, ctx): 
+		await ctx.channel.trigger_typing()
+
+		print(await get_matchup_json(46, 17))
 
 	@commands.command(aliases=["lastgame", "lm"])
 	async def lastmatch(self, ctx, *, matchfilter : MatchFilter = None):

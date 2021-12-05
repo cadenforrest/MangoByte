@@ -156,6 +156,8 @@ def row2dict(row):
 def print_debug(text):
 	if True or settings.debug:
 		print(text)
+	
+ asdflkjasd;lfjasl;dfj;alsdjfk
 
 class LoggingDb():
 	def __init__(self, loggingdb_path):
